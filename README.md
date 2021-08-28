@@ -48,3 +48,15 @@
   11. callback queue에 있던 첫 번째 `seTimeout`이 event loop를 통해 call stack으로 이동한다
   12. 첫 번째 `setTimeout` 내부 `console.log('zero')` 이 실행되며 call stack이 빈다
 
+---
+
+## encodeURIComponent
+
+- 해당 함수는 URI 특정 문자를 UTF-8로 인코딩해 연속된 이스케이프 문자로 나타냅니다.
+
+ > ```
+  > A-Z a-z 0-9 - _ . ! ~ * ' ( )
+  > ```
+
+- 위 문자들을 제외한 문자를 이스케이프합니다
+
