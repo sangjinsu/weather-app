@@ -13,7 +13,7 @@ module.exports = async function fetchWeather(searchText) {
 
     const { data } = await axios.get(weatherUrl, { params: weatherParams })
 
-    if (data.error && data.error.code === 615) {
+    if (data.error?.code === 615) {
       throw new Error(data.error.info)
     } else if (data.error) {
       throw new Error(data.error.info)
