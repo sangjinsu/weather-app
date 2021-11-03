@@ -49,6 +49,23 @@ app.get('/weather', (req, res) => {
   })
 })
 
+app.get('/help/*', (req, res) => {
+  res.render('404', {
+    title: '404',
+    name: 'Sang Jinsu',
+    errorMessage: 'Help article not found',
+  })
+})
+
+// express 는 위에서부터 아래로 매칭되는지 확인한다
+app.get('*', (req, res) => {
+  res.render('404', {
+    title: '404',
+    name: 'Sang Jinsu',
+    errorMessage: 'Page not found.',
+  })
+})
+
 app.listen(port, () => {
   console.log('server is on http://localhost:%d', port)
 })
