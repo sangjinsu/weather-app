@@ -2,6 +2,8 @@ require('dotenv').config()
 const express = require('express')
 const path = require('path')
 const hbs = require('hbs')
+const fetchWeather = require('../utils/fetchWeather')
+const { default: axios } = require('axios')
 
 const app = express()
 const port = 3000
@@ -21,36 +23,50 @@ hbs.registerPartials(partialPath)
 app.use(express.static(publicDirectoryPath))
 
 app.get('', (req, res) => {
-  res.render('index', {
+  return res.render('index', {
     title: 'Weather App',
     name: 'Sang Jinsu',
   })
 })
 
 app.get('/about', (req, res) => {
-  res.render('about', {
+  return res.render('about', {
     title: 'About Me',
     name: 'Sang Jinsu',
   })
 })
 
 app.get('/help', (req, res) => {
-  res.render('help', {
+  return res.render('help', {
     title: 'Help',
     helpText: '도움 관련 안내문',
     name: 'Sang Jinsu',
   })
 })
 
-app.get('/weather', (req, res) => {
-  res.send({
-    forecast: 'forecast',
-    location: 'Incheon',
+app.get('/weather', async (req, res) => {
+  if (!req.query.address) {
+    return res.send({
+      error: 'Need an address',
+    })
+  }
+
+  const forecast = await fetchWeather(req.query.address).catch((err) => {
+    console.error(err)
+    return res.render('404', {
+      title: '404',
+      name: 'Sang Jinsu',
+      errorMessage: 'Page not found.',
+    })
+  })
+
+  return res.send({
+    forecast,
   })
 })
 
 app.get('/help/*', (req, res) => {
-  res.render('404', {
+  return res.render('404', {
     title: '404',
     name: 'Sang Jinsu',
     errorMessage: 'Help article not found',
@@ -59,7 +75,7 @@ app.get('/help/*', (req, res) => {
 
 // express 는 위에서부터 아래로 매칭되는지 확인한다
 app.get('*', (req, res) => {
-  res.render('404', {
+  return res.render('404', {
     title: '404',
     name: 'Sang Jinsu',
     errorMessage: 'Page not found.',
