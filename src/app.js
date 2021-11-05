@@ -2,8 +2,9 @@ require('dotenv').config()
 const express = require('express')
 const path = require('path')
 const hbs = require('hbs')
+const bodyParser = require('body-parser')
+
 const fetchWeather = require('../utils/fetchWeather')
-const { default: axios } = require('axios')
 
 const app = express()
 const port = 3000
@@ -21,6 +22,8 @@ hbs.registerPartials(partialPath)
 
 // setup static directory to serve
 app.use(express.static(publicDirectoryPath))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get('', (req, res) => {
   return res.render('index', {
@@ -44,20 +47,17 @@ app.get('/help', (req, res) => {
   })
 })
 
-app.get('/weather', async (req, res) => {
-  if (!req.query.address) {
+app.post('/weather', async (req, res) => {
+  const { address } = req.body
+  if (!address) {
     return res.send({
       error: 'Need an address',
     })
   }
 
-  const forecast = await fetchWeather(req.query.address).catch((err) => {
+  const forecast = await fetchWeather(address).catch((err) => {
     console.error(err)
-    return res.render('404', {
-      title: '404',
-      name: 'Sang Jinsu',
-      errorMessage: 'Page not found.',
-    })
+    return res.status(404).json('Bad Request')
   })
 
   return res.send({
