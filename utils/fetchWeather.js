@@ -23,9 +23,7 @@ module.exports = async function fetchWeather(searchText) {
     const humidity = data.current.humidity
     const description = data.current.weather_descriptions[0].toLowerCase()
 
-    console.log(
-      `${placeName} is currently ${description} and ${temperature} degrees, ${humidity}% humidity `
-    )
+    return `${placeName} is currently ${description} and ${temperature} degrees, ${humidity}% humidity.`
   } catch (err) {
     console.error(err.message)
     console.log(err.stack)
