@@ -13,7 +13,7 @@ form.addEventListener('submit', async (event) => {
   try {
     const {
       data: { forecast },
-    } = await axios.post('/weather/', {
+    } = await axios.post('/weather', {
       address,
     })
 
