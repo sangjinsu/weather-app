@@ -2,22 +2,24 @@ const form = document.querySelector('#searchForm')
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault()
-  const address = document.querySelector('#searchInput').value
+  const address = document.querySelector('#searchInput').value.trim()
+  const forecastSentence = document.querySelector('#forecast')
 
   if (address.length === 0) {
+    forecastSentence.innerText = 'Need an Address'
     return
   }
 
-  const {
-    data: { forecast },
-  } = await axios
-    .post('http://localhost:3000/weather/', {
+  try {
+    const {
+      data: { forecast },
+    } = await axios.post('http://localhost:3000/weather/', {
       address,
     })
-    .catch((err) => {
-      console.err(err)
-    })
-  const forecastSentence = document.querySelector('#forecast')
-  console.log(forecast)
-  forecastSentence.innerText = forecast
+
+    forecastSentence.innerText = forecast
+  } catch (error) {
+    forecastSentence.innerText =
+      error.response.data ?? error.response.statusText ?? error.response.message
+  }
 })
