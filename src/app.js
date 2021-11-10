@@ -2,12 +2,11 @@ require('dotenv').config()
 const express = require('express')
 const path = require('path')
 const hbs = require('hbs')
-const bodyParser = require('body-parser')
 
 const fetchWeather = require('./utils/fetchWeather')
 
 const app = express()
-const port = 3000
+const port = process.env.PORT ?? 3000
 const publicDirectoryPath = path.join(__dirname, '../public')
 const viewsPath = path.join(__dirname, '../templates/views')
 const partialPath = path.join(__dirname, '../templates/partials')
@@ -22,8 +21,8 @@ hbs.registerPartials(partialPath)
 
 // setup static directory to serve
 app.use(express.static(publicDirectoryPath))
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 app.get('', (req, res) => {
   res.render('index', {
