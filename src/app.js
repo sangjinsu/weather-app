@@ -4,7 +4,7 @@ const path = require('path')
 const hbs = require('hbs')
 const bodyParser = require('body-parser')
 
-const fetchWeather = require('../utils/fetchWeather')
+const fetchWeather = require('./utils/fetchWeather')
 
 const app = express()
 const port = 3000
@@ -26,21 +26,21 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get('', (req, res) => {
-  return res.render('index', {
+  res.render('index', {
     title: 'Weather App',
     name: 'Sang Jinsu',
   })
 })
 
 app.get('/about', (req, res) => {
-  return res.render('about', {
+  res.render('about', {
     title: 'About Me',
     name: 'Sang Jinsu',
   })
 })
 
 app.get('/help', (req, res) => {
-  return res.render('help', {
+  res.render('help', {
     title: 'Help',
     helpText: '도움 관련 안내문',
     name: 'Sang Jinsu',
@@ -50,23 +50,22 @@ app.get('/help', (req, res) => {
 app.post('/weather', async (req, res) => {
   const { address } = req.body
   if (!address) {
-    return res.send({
-      error: 'Need an address',
-    })
+    res.status(400).send('Need an Address')
   }
 
-  const forecast = await fetchWeather(address).catch((err) => {
-    console.error(err)
-    return res.status(404).json('Bad Request')
-  })
-
-  return res.send({
-    forecast,
-  })
+  try {
+    const forecast = await fetchWeather(address)
+    res.send({
+      forecast,
+    })
+  } catch (error) {
+    console.error(error.message)
+    res.status(400).send(error.message)
+  }
 })
 
 app.get('/help/*', (req, res) => {
-  return res.render('404', {
+  res.render('404', {
     title: '404',
     name: 'Sang Jinsu',
     errorMessage: 'Help article not found',
@@ -75,7 +74,7 @@ app.get('/help/*', (req, res) => {
 
 // express 는 위에서부터 아래로 매칭되는지 확인한다
 app.get('*', (req, res) => {
-  return res.render('404', {
+  res.render('404', {
     title: '404',
     name: 'Sang Jinsu',
     errorMessage: 'Page not found.',
