@@ -1,5 +1,15 @@
 # Weather App
 
+### 변경 사항
+
+- fetch -> axios
+- async/await 활용
+- bootstrap 적용
+
+[weather app](https://sangjinsu-weather-app.herokuapp.com/) 
+
+![sangjinsu-weather-app](README.assets/sangjinsu-weather-app.gif)
+
 ## Asyncronous Node.js
 
 - 실행 순서
